@@ -1,0 +1,86 @@
+{
+  "name": "ai-token-counter",
+  "displayName": "AI Token Counter",
+  "description": "Count AI tokens for the current file or an entire folder. Uses cl100k_base encoding (GPT-4 / middle-ground estimate).",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aiTokenCounter.countFolder",
+        "title": "AI Token Counter: Count Tokens in Folder"
+      },
+      {
+        "command": "aiTokenCounter.countCurrentFile",
+        "title": "AI Token Counter: Count Tokens in Current File"
+      },
+      {
+        "command": "aiTokenCounter.manageIgnoredFolders",
+        "title": "AI Token Counter: Manage Ignored Folders"
+      }
+    ],
+    "configuration": {
+      "title": "AI Token Counter",
+      "properties": {
+        "aiTokenCounter.encoding": {
+          "type": "string",
+          "enum": [
+            "cl100k_base",
+            "o200k_base",
+            "p50k_base"
+          ],
+          "enumDescriptions": [
+            "cl100k_base — GPT-4, GPT-3.5-turbo",
+            "o200k_base — GPT-4o, o1, o3, GPT-5.x (more efficient, fewer tokens)",
+            "p50k_base  — GPT-3, Codex"
+          ],
+          "default": "cl100k_base",
+          "description": "Tokenizer encoding used to count tokens. Switch to o200k_base to match GPT-4o / o1 / o3 / GPT-5 counts."
+        },
+        "aiTokenCounter.ignoredFolders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "node_modules",
+            ".git",
+            ".svn",
+            "dist",
+            "build",
+            "out",
+            ".next",
+            ".nuxt",
+            "coverage",
+            ".venv",
+            "venv",
+            "__pycache__"
+          ],
+          "description": "Folder names to skip when counting tokens in a folder. Matched against each directory name (not the full path)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.39",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "gpt-tokenizer": "^2.1.2"
+  }
+}
